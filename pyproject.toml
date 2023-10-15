@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "fastcafe-ddd"
+version = "0.1.0"
+description = ""
+authors = ["sazonov-src <sazonov89vit@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fastcafe_ddd"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.4.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
