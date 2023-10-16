@@ -12,13 +12,9 @@ class OrderBase(ABC):
             self, 
             items: Optional[abc.Iterable[OrderLine]] = None,
             user_data: Optional[UserData] = None,
-            done: bool = False,
-            ready: bool = False
         ) -> None:
         self._items = set(items) if items else set()
         self._user_data = user_data
-        self._done = done
-        self._ready = ready
 
 
 class OrderItemsBase(OrderBase, ABC):
