@@ -7,10 +7,15 @@ readme = "README.md"
 packages = [{include = "fastcafe_ddd"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 pytest = "^7.4.2"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+# ...
+venvPath = "."
+venv = ".venv"
