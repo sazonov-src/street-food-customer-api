@@ -3,17 +3,15 @@ from collections import abc
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
-from domein import order
 
-from domein.order import base
-from domein.order.order_line import OrderLine
-from domein.order.user_data import UserData
+from . import base
+from .order_line import OrderLine
+from .user_data import UserData
 
 
 class OrderDataError(Exception):
     pass
 
-    
 class Status(Enum):
     NEW = 4
     CHECKOUTED = 3             

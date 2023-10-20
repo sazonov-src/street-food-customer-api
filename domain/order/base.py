@@ -1,10 +1,9 @@
-
 from abc import ABC, abstractmethod
 from collections import abc
 from typing import Optional
-from domein.order.order_line import OrderLine
+from .order_line import OrderLine
 
-from domein.order.user_data import UserData
+from .user_data import UserData
 
 
 class OrderBase(ABC):

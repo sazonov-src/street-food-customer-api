@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 import pytest
 
-from domein.order.order_line import OrderLine
-from domein.order.user_data import UserData
+from domain.order.order_line import OrderLine
+from domain.order.user_data import UserData
 
 @dataclass
 class FakePayment:

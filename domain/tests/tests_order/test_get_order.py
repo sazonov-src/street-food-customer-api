@@ -1,5 +1,5 @@
 import pytest
-from domein import order 
+from domain import order 
 
 def test_get_order_not_data():
     order_data = order.OrderData()
