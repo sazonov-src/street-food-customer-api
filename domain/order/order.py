@@ -14,7 +14,7 @@ class OrderDataError(Exception):
 
 class Status(Enum):
     NEW = 4
-    CHECKOUTED = 3             
+    CHECKOUTED = 3
     PAYED = 2
     READY = 1
     DONE = 0
@@ -23,7 +23,7 @@ class Status(Enum):
 class OrderChangeable(base.OrderItemsBase):
     def add_order_line(self, line):
         self._items.add(line)
-    
+   
     def rm_order_line(self, line):
         self._items.remove(line)
 
@@ -60,23 +60,24 @@ class OrderData[T: base.OrderItemsBase]:
     ready: bool = False
     done: bool = False
         
-    def __post_init__(self):
-        self._data = copy.copy(self.__dict__)
-        while self._data:
-            key, value = self._data.popitem()
+    @property
+    def _true_data(self):
+        data = copy.copy(self.__dict__)
+        while data:
+            key, value = data.popitem()
             if value:
-                self._data.update({key: value})
-                break
-        self.validate()
+                data.update({key: value})
+                return data
+        return {}
 
     def validate(self):
-        for value in self._data.values():
+        for value in self._true_data.values():
             if not value:
                 raise OrderDataError
 
     def _last_attr(self):
         try:
-            return tuple(self._data)[-1]
+            return tuple(self._true_data)[-1]
         except IndexError:
             return "items"
 
@@ -87,5 +88,8 @@ class OrderData[T: base.OrderItemsBase]:
             "payed": OrderPayed,
             "ready": OrderReady,
             "done": OrderDone
-        }[self._last_attr()](self.items, self.user_data)
-        
+       }[self._last_attr()](self.items, self.user_data)
+      
+    def __setattr__(self, __name, __value) :
+        super().__setattr__(__name, __value)
+        self.validate()

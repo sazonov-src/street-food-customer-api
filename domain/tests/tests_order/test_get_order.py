@@ -24,3 +24,16 @@ def test_get_order_payed(order_line, user_data):
 def test_get_order_error(order_line):
     with pytest.raises(order.OrderDataError):
         order.OrderData([order_line], payed=True)
+
+def test_change_order_data_ok(order_line, user_data):
+    order_data = order.OrderData([order_line])
+    order_data.user_data = user_data
+
+def test_change_order_data_error(order_line):
+    order_data = order.OrderData([order_line])
+    with pytest.raises(order.OrderDataError):
+        order_data.payed = True
+    with pytest.raises(order.OrderDataError):
+        order_data.ready = True
+    with pytest.raises(order.OrderDataError):
+        order_data.done = True
