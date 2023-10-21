@@ -53,7 +53,7 @@ class OrderDone(OrderNotChangeable):
 
 
 @dataclass
-class OrderData[T: base.OrderItemsBase]:
+class OrderStatus[T: base.OrderItemsBase]:
     items: Optional[abc.Iterable[OrderLine]] = None
     user_data: Optional[UserData] = None
     payed: bool = False
