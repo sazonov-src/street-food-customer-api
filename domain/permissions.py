@@ -1,5 +1,4 @@
-from abc import ABC, abstractmethod
-from domain import users
+from abc import ABC
 from order import order
 
 

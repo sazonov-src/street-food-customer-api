@@ -1,16 +1,11 @@
-import copy
-from collections import abc, defaultdict
-from dataclasses import dataclass
-from enum import Enum
+# type: ignore
+from abc import ABC, abstractmethod
+from collections import abc
 from typing import Optional
 
-import typing
-from . import base
-from .order_line import OrderLine
-from .user_data import UserData
+from order.order_line import OrderLine
+from order.user_data import UserData
 
-class OrderDataError(Exception):
-    pass
 
 class OrderSetKeyError(Exception):
     pass
@@ -18,15 +13,30 @@ class OrderSetKeyError(Exception):
 class OrderSetNotObjError(Exception):
     pass
 
-class Status(Enum):
-    NEW = 4
-    CHECKOUTED = 3
-    PAYED = 2
-    READY = 1
-    DONE = 0
+
+class OrderBase(ABC):
+    def __init__(
+            self, 
+            items: Optional[abc.Iterable[OrderLine]] = None,
+            user_data: Optional[UserData] = None,
+        ) -> None:
+        self._items = set(items) if items else set()
+        self._user_data = user_data
+
+    @abstractmethod
+    def add_order_line(self, line: OrderLine):
+        raise
+
+    @abstractmethod
+    def rm_order_line(self, line: OrderLine):
+        raise
+    
+    @property
+    def total_price(self):
+        pass
 
 
-class OrderChangeable(base.OrderItemsBase):
+class OrderChangeable(OrderBase):
     def add_order_line(self, line):
         self._items.add(line)
 
@@ -34,7 +44,7 @@ class OrderChangeable(base.OrderItemsBase):
         self._items.remove(line)
 
 
-class OrderNotChangeable(base.OrderItemsBase):
+class OrderNotChangeable(OrderBase):
     def add_order_line(self):
         raise
 
@@ -43,87 +53,16 @@ class OrderNotChangeable(base.OrderItemsBase):
 
 
 class OrderNew(OrderChangeable):
-    status = Status.NEW
+    pass
 
 class OrderCheckout(OrderChangeable):
-    status = Status.CHECKOUTED
+    pass
 
 class OrderPayed(OrderNotChangeable):
-    status = Status.PAYED
+    pass
 
 class OrderReady(OrderNotChangeable):
-    status = Status.READY
+    pass
 
 class OrderDone(OrderNotChangeable):
-    status = Status.DONE
-
-
-@dataclass
-class OrderStatus[T: base.OrderItemsBase]:
-    items: Optional[abc.Iterable[OrderLine]] = None
-    user_data: Optional[UserData] = None
-    payed: bool = False
-    ready: bool = False
-    done: bool = False
-
-    @property
-    def _true_data(self):
-        data = copy.copy(self.__dict__)
-        while data:
-            key, value = data.popitem()
-            if value:
-                data.update({key: value})
-                return data
-        return {}
-
-    def validate(self):
-        for value in self._true_data.values():
-            if not value:
-                raise OrderDataError
-
-    def _last_attr(self):
-        try:
-            return tuple(self._true_data)[-1]
-        except IndexError:
-            return "items"
-
-    def get_order(self) -> T:
-        return {
-            "items": OrderNew,
-            "user_data": OrderCheckout,
-            "payed": OrderPayed,
-            "ready": OrderReady,
-            "done": OrderDone
-       }[self._last_attr()](self.items, self.user_data)
-
-    def __setattr__(self, __name, __value) :
-        super().__setattr__(__name, __value)
-        self.validate()
-
-
-type ID = int
-class OrderDict[T: base.OrderBase](abc.Mapping):
-    def __init__(self, orders: dict[ID, T]):
-        try:
-            self._orders = {int(k): v for k, v in orders.items()}
-        except ValueError as ex:
-            raise OrderSetKeyError(ex) from ex
-
-    def get_orders(
-            self, 
-            type_: type[T]
-            ):
-        return {id: obj 
-                for id, obj 
-                in self._orders.items() 
-                if isinstance(obj, type_)}
-
-    def __getitem__(self, index):
-        return self._orders[index]
-
-    def __iter__(self):
-        return iter(self._orders)
-
-    def __len__(self) -> int:
-        return len(self._orders)
-
+    pass
