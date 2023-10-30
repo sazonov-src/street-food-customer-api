@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["sazonov-src <sazonov89vit@gmail.com>"]
 readme = "README.md"
-packages = [{include = "fastcafe_ddd"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
