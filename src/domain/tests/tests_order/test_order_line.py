@@ -34,4 +34,5 @@ def test_bed_minus_count(item):
 def test_eq_orderline(item):
     line1 = order.OrderLine(item, order.Count(1)) 
     line2 = order.OrderLine(item, order.Count(5)) 
+    assert len({line1, line2}) == 1
     assert line1 == line2
