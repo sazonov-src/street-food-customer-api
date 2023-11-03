@@ -11,7 +11,7 @@ class Count(int):
     
 
 @dataclass
-class OrderLine:
+class CartItem:
     item: Item
     count: Count
 
@@ -22,7 +22,7 @@ class OrderLine:
     def __hash__(self) -> int:
         return hash(self.item)
 
-    def __eq__(self, value: OrderLine) -> bool:
+    def __eq__(self, value: CartItem) -> bool:
         return self.item == value.item
 
     def plus_count(self):
