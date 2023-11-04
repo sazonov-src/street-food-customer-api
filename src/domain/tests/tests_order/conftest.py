@@ -9,7 +9,7 @@ def item():
 
 @pytest.fixture
 def item2():
-    return items.Item("Some item2", "Good item", 20.0)
+    return items.Item("Some item2", "Good item", 30.0)
 
 @pytest.fixture
 def line_item(item):

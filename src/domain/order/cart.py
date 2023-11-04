@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 from order.cart_line import CartItem
 
+class CartNotChangeableError(Exception):
+    pass
+
 
 class CartBase(ABC):
     def __init__(self, *args: CartItem) -> None:
@@ -12,7 +15,7 @@ class CartBase(ABC):
         pass
 
     @abstractmethod
-    def rm_order_line(self, line: CartItem):
+    def rm_line(self, line: CartItem):
         pass
     
     @property
@@ -36,7 +39,7 @@ class CartChangeable(CartBase):
 
 class CartNotChangeable(CartBase):
     def add_line(self):
-        raise
+        raise CartNotChangeableError
 
     def rm_line(self):
-        raise
+        raise CartNotChangeableError
