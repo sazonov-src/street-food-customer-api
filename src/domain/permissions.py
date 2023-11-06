@@ -1,5 +1,5 @@
 from abc import ABC
-from order import order
+import order
 
 
 class PermissionNotFoundObjTypeError(Exception):
@@ -33,11 +33,6 @@ class PermissionBase(ABC):
 
 class PermissionCastomerBase(PermissionBase, ABC):
     PERMISSIONS = {
-        order.OrderNew : "crud",
-        order.OrderCheckout : "crud",
-        order.OrderPayed : "cr",
-        order.OrderReady : "r",
-        order.OrderDone : "r",
         }
 
 class PermissionCastomerCreate(PermissionCastomerBase):
