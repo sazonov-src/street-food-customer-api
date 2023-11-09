@@ -4,9 +4,10 @@ from collections.abc import Iterable, Mapping, MutableMapping
 
 import items
 
+LINE = tuple[items.Item, int]
 
 class BaseCart:
-    def __init__(self, *args: tuple[items.Item, int]):
+    def __init__(self, *args: LINE):
         items = ((item, self._get_valid_count(count)) for item, count in args)
         self._lines = dict(items)
 
@@ -23,8 +24,7 @@ class BaseCart:
     def _get_valid_count(count: int):
         try:
             count = int(count)
-            if count < 1:
-                raise
+            assert count > 0
         except:
             raise ValueError("Count is not valide")
         return count
@@ -37,7 +37,7 @@ class BaseCartMutable(BaseCart, MutableMapping):
 
     def __delitem__(self, item):
         del self._lines[item]
-
+ 
 
 class BaseCartView(BaseCart):
     @property
