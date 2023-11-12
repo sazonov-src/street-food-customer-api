@@ -1,9 +1,17 @@
-class Payment:
-    def __init__(self, order) -> None:
-        self.order = order
+from abc import ABC, abstractmethod
 
+
+class BasePayment(ABC):
+
+    @property
+    @abstractmethod
+    def order(self):
+        pass
+
+    @abstractmethod
     def get_payment_url(self) -> str:
-        return ""
+        pass
     
+    @abstractmethod
     def is_payment(self) -> bool:
-        return True
+        pass
