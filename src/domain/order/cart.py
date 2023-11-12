@@ -1,6 +1,4 @@
-from abc import ABC, abstractmethod
-from collections import UserDict
-from collections.abc import Iterable, Mapping, MutableMapping
+from collections.abc import Iterable, MutableMapping
 
 import items
 
@@ -30,15 +28,6 @@ class BaseCart:
         return count
 
 
-class BaseCartMutable(BaseCart, MutableMapping):
-    def __setitem__(self, item, count):
-        count = int(count)
-        self._lines[item] = count
-
-    def __delitem__(self, item):
-        del self._lines[item]
- 
-
 class BaseCartView(BaseCart):
     @property
     def total_count(self):
@@ -49,12 +38,24 @@ class BaseCartView(BaseCart):
         return sum(i.price * c for i, c in self._lines.items())
 
     @property
-    def lines(self):
-        return tuple(self._lines.values())
+    def lines(self) -> Iterable[LINE]:
+        return self._lines.items()
+
+
+class BaseCartMutable(BaseCartView, MutableMapping):
+    def __setitem__(self, item, count):
+        count = int(count)
+        self._lines[item] = count
+
+    def __delitem__(self, item):
+        del self._lines[item]
+ 
+
+
 
 
 class CartNotNutable(BaseCartView):
     pass
 
-class CartMutable(BaseCartMutable, BaseCartView):
+class CartMutable(BaseCartMutable):
     pass
