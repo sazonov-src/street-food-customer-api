@@ -27,6 +27,3 @@ build-backend = "poetry.core.masonry.api"
 # ...
 venvPath = "."
 venv = ".venv"
-
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "dj.dj.settings"
