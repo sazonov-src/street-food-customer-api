@@ -1,5 +1,5 @@
 from app_menu.models import MenuItem
-from dj.dj.repository import BaseRepository
+from dj.repository import BaseRepository
 from domain import items
 
 
