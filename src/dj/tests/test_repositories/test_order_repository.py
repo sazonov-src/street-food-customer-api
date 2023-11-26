@@ -1,16 +1,32 @@
 import pytest
 
-from app_order.repository import RepositoryOrder
+from app_order.models import CartLine
+
 
 @pytest.mark.django_db
-def test_(order_model, order_domain, user_data):
-    print(order_model.cartline_set.first().menu_item.title)
-    repo = RepositoryOrder(order_model)
-    print(repo.get())
-    repo.add(order_domain)
-    order_domain.mark_as_checkouted(user_data)
-    repo.add(order_domain)
-    print(repo.get())
+def test_add_item(domain_item, fake_repo):
+    assert len(fake_repo.model.cartline_set.all()) == 0
+    assert len(fake_repo.get().cart) == 0
+    domain = fake_repo.get()
+    domain.cart[domain_item] = 1
+    fake_repo.add(domain)
+    assert len(fake_repo.model.cartline_set.all()) == 1
+    assert len(fake_repo.get().cart) == 1
+
+@pytest.mark.django_db
+def test_del_item(domain_item, model_item, fake_repo):
+    CartLine.objects.create(order=fake_repo.model, menu_item=model_item, count=11)
+    assert len(fake_repo.model.cartline_set.all()) == 1
+    assert len(fake_repo.get().cart) == 1
+    domain = fake_repo.get()
+    del domain.cart[domain_item]
+    fake_repo.add(domain)
+    assert len(fake_repo.model.cartline_set.all()) == 0
+    assert len(fake_repo.get().cart) == 0
+    
+    
+
+
 
     
 

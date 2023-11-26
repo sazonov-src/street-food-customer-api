@@ -1,9 +1,10 @@
 import pytest
 from mixer.backend.django import mixer
+from app_order.repository import RepositoryOrder
 
-from domain import items
 from domain import order
 from app_menu.repository import RepositoryMenuItem
+
 
 class FakePayment(order.BasePayment):
     def order(self):
@@ -15,25 +16,31 @@ class FakePaymentTrue(FakePayment):
     def is_payment(self) -> bool:
         return True
 
+class TestRepositoryOrder(RepositoryOrder):
+    def __init__(self):
+        self._order_model = mixer.blend('app_order.Order')
+
+
 @pytest.fixture
-def item_model():
+def fake_repo():
+    return TestRepositoryOrder()
+
+@pytest.fixture
+def model_item():
     return mixer.blend("app_menu.MenuItem")
 
 @pytest.fixture
-def item(item_model):
-    return RepositoryMenuItem(item_model).get()
+def domain_item(model_item):
+    return RepositoryMenuItem(model_item).get()
 
 @pytest.fixture
-def user_data():
+def domain_user_data():
     return order.UserData("Vasia", "01")
 
 @pytest.fixture
-def order_domain(item):
-    ord = order.OrderCustomer([(item, 1)])
-    return ord
+def domain_order(model_item):
+    return order.OrderCustomer([(model_item, 1)])
 
 @pytest.fixture
-def order_model(item_model):
-    model = mixer.blend("app_order.Order")
-    mixer.blend("app_order.CartLine", order=model, menu_item=item_model)
-    return model
+def model_order():
+    return mixer.blend("app_order.Order")
