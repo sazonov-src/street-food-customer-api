@@ -10,7 +10,9 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     ready = models.BooleanField(default=False)
     done = models.BooleanField(default=False)
-    cart_line_set: models.QuerySet[CartLine]
+
+    cartline_set: models.QuerySet[CartLine]
+    userdata: UserData
 
 
 class CartLine(models.Model):
