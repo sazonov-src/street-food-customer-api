@@ -38,8 +38,8 @@ def domain_user_data():
     return order.UserData("Vasia", "01")
 
 @pytest.fixture
-def domain_order(model_item):
-    return order.OrderCustomer([(model_item, 1)])
+def domain_order(domain_item):
+    return order.OrderCustomer([(domain_item, 1)])
 
 @pytest.fixture
 def model_order():
