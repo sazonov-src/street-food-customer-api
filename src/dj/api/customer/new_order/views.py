@@ -4,10 +4,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from app_order.services import *
+from dj.app_order.serializer import CartLineSerializer, OrderSerializer
 
 @api_view()
 def get_order(request):
-    order_repo = get_new_repo_order_customer(user=request.user)
+    order_repo = get_new_order_customer_repo(user=request.user)
     return Response({
         "created_at": order_repo.model.created_at.isoformat(),
         "updated_at": order_repo.model.updated_at.isoformat(),
@@ -16,22 +17,11 @@ def get_order(request):
 
 @api_view()
 def get_cart(request):
-    return Response({"massage": "this is inform for your cart"})
-
-
-class CartItemsViewSet(ViewSet):
-
-    def list(self, request: Request):
-        return Response([{"item":1}, {"item":2}])
-
-    def create(self, request):
-        return Response({"massage": "The order was created"})
-
-    def retrieve(self, request, pk=None):
-        return Response({"item": 1})
-
-    def update(self, request, pk=None):
-        return Response({"massage": "The order was updated"})
-
-    def destroy(self, request, pk=None):
-        return Response({"massage": "The order was deleted"})
+    order_repo = get_new_order_customer_repo(user=request.user)
+    lines = get_order_cart_lines(order=order_repo.model)
+    serializer = CartLineSerializer(lines, many=True)
+    order = order_repo.get()
+    return Response({
+        "total-count": order.cart.total_count,
+        "total-price": order.cart.total_price,
+        "lines": serializer.data,})
