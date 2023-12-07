@@ -33,3 +33,9 @@ def get_new_order_customer_repo(user: User):
 
 def get_order_cart_lines(order: Order):
     return CartLine.objects.filter(order=order)
+
+def get_or_create_new_order_customer_repo(user: User):
+    try:
+        return get_new_order_customer_repo(user=user)
+    except Http404:
+        return RepositoryOrder(Order.objects.create(user=user))
