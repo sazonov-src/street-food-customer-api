@@ -4,15 +4,17 @@ from rest_framework.test import APIClient
 
 
 @pytest.fixture
-@pytest.mark.django_db
 def user():
     return mixer.blend('auth.user')
 
 
 @pytest.fixture
-@pytest.mark.django_db
 def client(user):
     client = APIClient()
     client.force_authenticate(user=user)
     return client
 
+
+@pytest.fixture
+def order(user):
+    return mixer.blend("app_order.order", user=user)
