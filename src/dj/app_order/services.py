@@ -1,16 +1,24 @@
-from typing import Iterable
-from django.contrib.auth.models import User
-from django.db.models import QuerySet
 from django.http.response import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
+from rest_framework.views import Response
 
 from app_order.repository import RepositoryOrder
 from app_order.models import CartLine, Order
 from app_menu.models import MenuItem
 from app_menu.repository import RepositoryMenuItem
+from app_order.serializer import CartLineSerializer
 from domain.order.orders import StateCustomerNew
+
+
+def validate(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except (ValueError, KeyError) as ex:
+            raise ValidationError(ex)
+    return wrapper
 
 
 class ServiceOrders:
@@ -54,21 +62,35 @@ class ServiceOrderNew:
 
 class ServiceOrederCart:
     def __init__(self, order: RepositoryOrder) -> None:
-        self._order = order
+        self._order_repo = order
 
     @property
-    def lines_queryset(self):
-        return CartLine.objects.filter(order=self._order.model)
+    def _lines_queryset(self):
+        return CartLine.objects.filter(order=self._order_repo.model)
 
-    def add_item(self, menu_item_id, count):
-        menu_item = RepositoryMenuItem(
+    @staticmethod
+    def _get_menu_item(menu_item_id: int):
+        return RepositoryMenuItem(
             get_object_or_404(MenuItem, id=menu_item_id)).get()
-        order = self._order.get()
-        order.cart[menu_item] = count 
-        self._order.add(order)
 
-    def del_item(self, menu_item):
-        pass
+    @validate
+    def cart_info(self):
+        serializer = CartLineSerializer(
+                ServiceOrederCart(self._order_repo)._lines_queryset, many=True)
+        order = self._order_repo.get()
+        return {
+            "total_count": order.cart.total_count,
+            "total_price": order.cart.total_price,
+            "lines": serializer.data,}
+        
+    @validate
+    def add_line(self, request):
+        id, count = request.data['id_menu_item'], request.data['count']
+        order = self._order_repo.get()
+        order.cart[self._get_menu_item(id)] = count 
+        self._order_repo.add(order)
+        return {"id_menu_item": id, "count": count}
+
 
 
 def get_new_order_repo(request):

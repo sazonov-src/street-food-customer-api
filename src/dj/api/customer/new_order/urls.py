@@ -1,8 +1,12 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from api.customer.new_order.views import CartApiView, get_order
+from api.customer.new_order.views import CartViewSet, get_order
+
+cart = DefaultRouter()
+cart.register('cart', CartViewSet, basename='cart')
 
 urlpatterns = [
     path("", get_order, name="get_order"),
-    path("cart/", CartApiView.as_view(), name="get_cart"),
+    path("", include(cart.urls)),
 ]
