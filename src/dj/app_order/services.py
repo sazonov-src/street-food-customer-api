@@ -91,6 +91,29 @@ class ServiceOrederCart:
         self._order_repo.add(order)
         return {"id_menu_item": id, "count": count}
 
+    @validate
+    def del_line(self, pk):
+        order = self._order_repo.get()
+        del order.cart[self._get_menu_item(pk)]
+        self._order_repo.add(order)
+        return {"id_menu_item": pk}
+
+    @validate
+    def plus_count_line(self, pk):
+        order = self._order_repo.get()
+        item = self._get_menu_item(pk)
+        order.cart[item] += 1
+        self._order_repo.add(order)
+        return {"id_menu_item": pk, "count": order.cart[item]}
+
+    @validate
+    def minus_count_line(self, pk):
+        order = self._order_repo.get()
+        item = self._get_menu_item(pk)
+        order.cart[item] -= 1
+        self._order_repo.add(order)
+        return {"id_menu_item": pk, "count": order.cart[item]}
+
 
 
 def get_new_order_repo(request):

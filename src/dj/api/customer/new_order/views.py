@@ -25,3 +25,19 @@ class CartViewSet(viewsets.ViewSet):
     def create(self, request):
         order_repo = get_or_create_new_order_repo(request)
         return Response(ServiceOrederCart(order_repo).add_line(request))
+
+    def destroy(self, request, pk):
+        order_repo = get_new_order_repo(request)
+        return Response(ServiceOrederCart(order_repo).del_line(pk))
+
+    @action(detail=True, methods=['post'])
+    def plus_count(self, request, pk):
+        order_repo = get_new_order_repo(request)
+        return Response(ServiceOrederCart(order_repo).plus_count_line(pk))
+
+    @action(detail=True, methods=['post'])
+    def minus_count(self, request, pk):
+        order_repo = get_new_order_repo(request)
+        return Response(ServiceOrederCart(order_repo).minus_count_line(pk))
+
+
