@@ -1,15 +1,35 @@
 from abc import ABC, abstractmethod
+from app_order.models import Order
+
+import domain
+from domain.order.orders import OrderCustomer
 
 
-class BaseRepository(ABC):
-    @abstractmethod
-    def add(self):
+class BaseRepository[DM, MD](ABC):
+    def __init__(self, model: MD):
         pass
 
     @abstractmethod
-    def get(self):
+    def add(self, obj: DM):
         pass
 
     @abstractmethod
-    def model(self):
+    def get(self) -> DM:
         pass
+
+    @abstractmethod
+    def model(self) -> MD:
+        pass
+
+
+class base_repo[R: BaseRepository]:
+    def __init__(self, repo: R):
+        self.repo = repo
+        self.domain = self.repo.get()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.repo.add(self.domain)
+
