@@ -17,4 +17,4 @@ class CartLineSerializer(BaseModelSerializer):
 class UserDataSerializer(BaseModelSerializer):
     class Meta:
         model = UserData
-        fields = '__all__'
+        fields = ['name', 'phone']

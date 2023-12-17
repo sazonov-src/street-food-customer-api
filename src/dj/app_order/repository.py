@@ -36,12 +36,12 @@ class RepositoryCheckout(OrderMixin):
     def get(self):
         userdata = self._order_model.userdata
         return domain.UserData(
-                name=userdata.user_name,
+                name=userdata.name,
                 phone=userdata.phone)
 
     def add(self, userdata: domain.UserData):
         UserData.objects.update_or_create(order=self._order_model, defaults={
-            'user_name': userdata.name,
+            'name': userdata.name,
             'phone': userdata.phone})
 
 
