@@ -23,3 +23,8 @@ def order(user):
 @pytest.fixture
 def item_22():
     return mixer.blend("app_menu.MenuItem", id=22)
+
+
+@pytest.fixture
+def cart_not_empty(item_22, order):
+    return mixer.blend("app_order.CartLine", item=item_22, order=order, count=2)

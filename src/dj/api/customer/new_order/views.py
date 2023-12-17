@@ -1,9 +1,11 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
+from rest_framework import views
 
 from app_order.services import *
 from app_order.repository import repo
+from app_order.serializer import UserDataSerializer
 
 
 @api_view()
@@ -46,5 +48,15 @@ class CartViewSet(viewsets.ViewSet):
     def minus_count(self, request, pk):
         with repo(get_new_order_repo(request)) as order:
             res = ServiceOrderCartLine(order.domain.cart).minus_count_line(pk)
+        return Response(res)
+
+
+class CheckoutView(views.APIView):
+    def post(self, request):
+        serializer = UserDataSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        with repo(get_new_order_repo(request)) as order:
+            print(serializer.data)
+            res = ServiceOrderCheckout(order.domain).mark_as_checkout(serializer.data)
         return Response(res)
 
