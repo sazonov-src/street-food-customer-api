@@ -44,7 +44,7 @@ class BaseCartView(BaseCart):
 
 class BaseCartMutable(BaseCartView, MutableMapping):
     def __setitem__(self, item, count):
-        count = int(count)
+        count = self._get_valid_count(count)
         self._lines[item] = count
 
     def __delitem__(self, item):
