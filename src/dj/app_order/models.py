@@ -23,6 +23,6 @@ class CartLine(models.Model):
 
 class UserData(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
-    user_name = models.CharField(max_length=225)
+    name = models.CharField(max_length=225)
     phone = models.CharField(max_length=225)
 

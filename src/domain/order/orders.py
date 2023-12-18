@@ -54,7 +54,7 @@ class BaseCustomerOrder(BaseOrder, BaseOrderCheckout, BaseOrderPayed):
 
 
 class BaseState(ABC):
-    cart_type: type[order.BaseCartView]
+    pass
 
 
 class BaseCheckoutState(ABC):
