@@ -3,7 +3,7 @@ from rest_framework.request import Request
 
 from app_order.models import Order
 from app_order.repository import RepositoryOrder
-from domain.order.orders import StateCustomerNew
+from domain.order.orders import StateCustomerNew, StateCustomerPayed
 
 
 class ServiceOrders:
@@ -40,7 +40,7 @@ class ServiceOrderNew:
 
     def get_new_order_repo(self):
         for order_repo in self._orders_repos:
-            if isinstance(order_repo.get().state, StateCustomerNew):
+            if not isinstance(order_repo.get().state, StateCustomerPayed):
                 return order_repo
         raise Http404
 
