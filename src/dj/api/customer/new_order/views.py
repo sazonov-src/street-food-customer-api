@@ -56,7 +56,11 @@ class CheckoutView(views.APIView):
         serializer = UserDataSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         with repo(get_new_order_repo(request)) as order:
-            print(serializer.data)
             res = ServiceOrderCheckout(order.domain).mark_as_checkout(serializer.data)
         return Response(res)
+
+    def get(self, request):
+        order = get_new_order_repo(request)
+        serializer = UserDataSerializer(order.model.userdata)
+        return Response(serializer.data)
 
