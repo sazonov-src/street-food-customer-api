@@ -3,13 +3,10 @@ from abc import ABC, abstractmethod
 from typing import Iterable
 import order
 
-class OrderException(Exception):
+class OrderStateException(ValueError):
     pass
 
-class OrderStateException(OrderException):
-    pass
-
-class OrderValueException(OrderException, ValueError):
+class OrderValueException(ValueError):
     pass
 
 class BaseOrder(ABC):
