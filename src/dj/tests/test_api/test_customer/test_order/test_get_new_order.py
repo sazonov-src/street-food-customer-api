@@ -8,14 +8,12 @@ def test_get_order(client):
     assert r.status_code == status.HTTP_404_NOT_FOUND
 
 @pytest.mark.django_db
-def test_get_order_not_done(client, user):
-    mixer.blend('app_order.Order', user=user, done=False)
+def test_get_order_not_done(client, order):
     r: Response = client.get("/api/v1/customer/new-order/")
     assert r.status_code == status.HTTP_200_OK
 
 @pytest.mark.django_db
-def test_get_order_with_done(client, user):
-    mixer.blend('app_order.Order', user=user, done=True)
+def test_get_order_with_done(client, order_done):
     r: Response = client.get("/api/v1/customer/new-order/")
     assert r.status_code == status.HTTP_404_NOT_FOUND
 

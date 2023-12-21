@@ -14,5 +14,3 @@ class MenuItemViewSet(ViewSet):
         items_queryset = MenuItem.objects.get(pk=pk)
         serializer = MenuItemSerializer(items_queryset)
         return Response(serializer.data)
-
-
