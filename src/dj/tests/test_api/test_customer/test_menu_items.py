@@ -1,8 +1,5 @@
-from re import A
 import pytest
-from rest_framework.test import APIClient
 from rest_framework.response import Response
-from mixer.backend.django import mixer
 from rest_framework.views import status
 
 

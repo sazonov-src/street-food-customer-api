@@ -3,7 +3,7 @@ from rest_framework.exceptions import NotFound
 
 from app_order.models import Order
 from app_order.repository import RepositoryOrder
-from domain.order.orders import StateCustomerNew, StateCustomerPayed
+from domain.order.orders import StateCustomerPayed
 
 
 class ServiceOrders:

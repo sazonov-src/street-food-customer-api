@@ -4,7 +4,6 @@ from mixer.backend.django import mixer
 from app_menu.serializer import MenuItemSerializer
 from app_order.serializer import *
 from dj.serializers import SaveException
-from rest_framework.parsers import JSONParser
 
 
 def test_menu_item_serializer():

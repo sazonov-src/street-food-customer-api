@@ -1,6 +1,5 @@
 from typing import Iterable
 from dataclasses import asdict
-from django.http import Http404
 
 from app_order.models import CartLine, Order, UserData
 from app_menu.repository import RepositoryMenuItem

@@ -1,6 +1,5 @@
 import pytest
 from rest_framework.views import Response, status
-from mixer.backend.django import mixer
 
 
 @pytest.mark.django_db

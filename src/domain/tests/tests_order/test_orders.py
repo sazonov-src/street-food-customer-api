@@ -1,6 +1,5 @@
 import order
 import pytest
-import items
 
 
 def test_state_ok(order_new, checkout, payment_true):

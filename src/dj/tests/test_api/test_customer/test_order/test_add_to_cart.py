@@ -1,9 +1,7 @@
 import pytest
 from rest_framework.views import Response, status
-from mixer.backend.django import mixer
 
 from dj.app_order.repository import RepositoryOrder
-from domain import order as ord
 
 
 @pytest.mark.django_db

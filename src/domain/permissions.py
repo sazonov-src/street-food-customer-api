@@ -1,5 +1,4 @@
 from abc import ABC
-import order
 
 
 class PermissionNotFoundObjTypeError(Exception):

@@ -1,8 +1,5 @@
 from abc import ABC, abstractmethod
-from app_order.models import Order
 
-import domain
-from domain.order.orders import OrderCustomer
 
 
 class BaseRepository[DM, MD](ABC):
