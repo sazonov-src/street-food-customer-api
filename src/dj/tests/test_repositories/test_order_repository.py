@@ -1,7 +1,7 @@
 import pytest
 
 from app_order.models import CartLine
-from domain.order.orders import OrderValueException
+from domain.order.orders import NotFoundException
 
 @pytest.mark.django_db
 def test_add_item(domain_item, fake_repo):
@@ -26,7 +26,7 @@ def test_get_item(domain_item, model_item, fake_repo):
     
 @pytest.mark.django_db
 def test_user_data(domain_user_data, domain_order, fake_repo):
-    with pytest.raises(OrderValueException):
+    with pytest.raises(NotFoundException):
         fake_repo.get().user_data
     domain_order.mark_as_checkouted(domain_user_data)
     fake_repo.add(domain_order)

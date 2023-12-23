@@ -1,12 +1,13 @@
 from typing import Iterable
 from dataclasses import asdict
+from django.http import Http404
 
 from app_order.models import CartLine, Order, UserData
 from app_menu.repository import RepositoryMenuItem
 from app_menu.models import MenuItem
 from dj.repository import BaseRepository, base_repo
 from domain import order as domain
-from domain.order.orders import OrderCustomer, OrderValueException
+from domain.order.orders import OrderCustomer, NotFoundException
 
 
 class OrderMixin:
@@ -60,7 +61,7 @@ class RepositoryOrder[DM: OrderCustomer, MD: Order](OrderMixin, BaseRepository):
             RepositoryOrderCartLines(self._order_model).add(line)
         try:
             RepositoryCheckout(self._order_model).add(order.user_data)
-        except OrderValueException:
+        except NotFoundException:
             pass
 
 

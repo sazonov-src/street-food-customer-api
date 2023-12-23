@@ -4,6 +4,8 @@ import items
 
 LINE = tuple[items.Item, int]
 
+COUNT_ERROR_MASAGE = "Count is not valide"
+
 class BaseCart:
     def __init__(self, *args: LINE):
         items = ((item, self._get_valid_count(count)) for item, count in args)
@@ -24,7 +26,7 @@ class BaseCart:
             count = int(count)
             assert count > 0
         except:
-            raise ValueError("Count is not valide")
+            raise ValueError(COUNT_ERROR_MASAGE)
         return count
 
 
