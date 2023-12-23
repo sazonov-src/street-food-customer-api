@@ -109,7 +109,7 @@ class StateCustomerNew(BaseCustomerState):
     cart_type = order.CartMutable
     def mark_as_checkouted(self, checkout):
         if not len(self._order._cart):
-            raise NotFoundException()
+            raise NotFoundException(EMPTY_CART_MASAGE)
         self._order._user_data = checkout
         self._order._state = StateCustomerCheckout(self._order)
 
@@ -139,13 +139,13 @@ class OrderCustomer(BaseCustomerOrder):
     @property
     def user_data(self) -> order.UserData:
         if not self._user_data:
-            raise NotFoundException()
+            raise NotFoundException(NOT_FOUND_USERDATA_MASAGE)
         return self._user_data
 
     @property
     def payment(self) -> order.BasePayment:
         if not self._payment:
-            raise NotFoundException()
+            raise NotFoundException(NOT_FOUND_PAYMENT_MASAGE)
         return self._payment
 
     def mark_as_checkouted(self, checkout: order.UserData):
