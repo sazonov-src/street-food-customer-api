@@ -3,13 +3,20 @@ from abc import ABC, abstractmethod
 from typing import Iterable
 import order
 
-class OrderException(Exception):
+
+ALREADY_PAYED_MASAGE = "Order is already payed"
+ALREADY_CHECKOUT_MASAGE = "Order is already checkouted"
+EMPTY_CART_MASAGE = "Cart is empty"
+PAYMENT_IS_NOT_VALID_MASAGE = "Payment is not valid"
+FIRST_CHECKOUT_MASAGE = "Order must be checkouted first"
+NOT_FOUND_USERDATA_MASAGE = "User data not found"
+NOT_FOUND_PAYMENT_MASAGE = "Payment not found"
+
+
+class OrderStateException(ValueError):
     pass
 
-class OrderStateException(OrderException):
-    pass
-
-class OrderValueException(OrderException, ValueError):
+class NotFoundException(ValueError):
     pass
 
 class BaseOrder(ABC):
@@ -75,37 +82,39 @@ class BaseCustomerState(BaseState, BaseCheckoutState, BasePaymentState):
 
 class StateCustomerPayed(BaseCustomerState):
     cart_type = order.CartNotNutable
+
     def mark_as_checkouted(self, checkout):
-        raise OrderStateException()
+        raise OrderStateException(ALREADY_CHECKOUT_MASAGE)
 
     def mark_as_payed(self, payment: order.BasePayment):
-        raise OrderStateException()
+        raise OrderStateException(ALREADY_PAYED_MASAGE)
 
 
 class StateCustomerCheckout(BaseCustomerState):
     cart_type = order.CartMutable
+
     def mark_as_checkouted(self, checkout):
-        raise OrderStateException()
+        raise OrderStateException(ALREADY_CHECKOUT_MASAGE)
 
     def mark_as_payed(self, payment: order.BasePayment):
         if not len(self._order.cart):
-            raise OrderValueException()
+            raise NotFoundException(EMPTY_CART_MASAGE)
         if payment.is_payment():
             self._order._state = StateCustomerPayed(self._order)
         else:
-            raise OrderStateException()
+            raise OrderStateException(PAYMENT_IS_NOT_VALID_MASAGE)
 
 
 class StateCustomerNew(BaseCustomerState):
     cart_type = order.CartMutable
     def mark_as_checkouted(self, checkout):
         if not len(self._order._cart):
-            raise OrderValueException()
+            raise NotFoundException(EMPTY_CART_MASAGE)
         self._order._user_data = checkout
         self._order._state = StateCustomerCheckout(self._order)
 
     def mark_as_payed(self, payment: order.BasePayment):
-        raise OrderStateException()
+        raise OrderStateException(FIRST_CHECKOUT_MASAGE)
 
 
 class OrderCustomer(BaseCustomerOrder):
@@ -130,13 +139,13 @@ class OrderCustomer(BaseCustomerOrder):
     @property
     def user_data(self) -> order.UserData:
         if not self._user_data:
-            raise OrderValueException()
+            raise NotFoundException(NOT_FOUND_USERDATA_MASAGE)
         return self._user_data
 
     @property
     def payment(self) -> order.BasePayment:
         if not self._payment:
-            raise OrderValueException()
+            raise NotFoundException(NOT_FOUND_PAYMENT_MASAGE)
         return self._payment
 
     def mark_as_checkouted(self, checkout: order.UserData):

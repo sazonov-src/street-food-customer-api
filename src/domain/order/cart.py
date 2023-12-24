@@ -4,6 +4,9 @@ import items
 
 LINE = tuple[items.Item, int]
 
+COUNT_ERROR_MASAGE = "Count is not valide"
+ITEM_IS_NOT_IN_CART_MASAGE = "Item not found in cart" 
+
 class BaseCart:
     def __init__(self, *args: LINE):
         items = ((item, self._get_valid_count(count)) for item, count in args)
@@ -24,7 +27,7 @@ class BaseCart:
             count = int(count)
             assert count > 0
         except:
-            raise ValueError("Count is not valide")
+            raise ValueError(COUNT_ERROR_MASAGE)
         return count
 
 
@@ -45,11 +48,16 @@ class BaseCartView(BaseCart):
 class BaseCartMutable(BaseCartView, MutableMapping):
     def __setitem__(self, item, count):
         count = self._get_valid_count(count)
-        self._lines[item] = count
+        try:
+            self._lines[item] = count
+        except KeyError:
+            raise ValueError(ITEM_IS_NOT_IN_CART_MASAGE)
 
     def __delitem__(self, item):
-        del self._lines[item]
- 
+        try:
+            del self._lines[item]
+        except KeyError:
+            raise ValueError(ITEM_IS_NOT_IN_CART_MASAGE)
 
 
 

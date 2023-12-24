@@ -1,9 +1,9 @@
-from django.http import Http404
 from rest_framework.request import Request
+from rest_framework.exceptions import NotFound
 
 from app_order.models import Order
 from app_order.repository import RepositoryOrder
-from domain.order.orders import StateCustomerNew, StateCustomerPayed
+from domain.order.orders import StateCustomerPayed
 
 
 class ServiceOrders:
@@ -42,7 +42,7 @@ class ServiceOrderNew:
         for order_repo in self._orders_repos:
             if not isinstance(order_repo.get().state, StateCustomerPayed):
                 return order_repo
-        raise Http404
+        raise NotFound("New order not found")
 
 def get_new_order_repo(request):
     orders_queryset = ServiceOrders(request).not_done_orders
@@ -56,5 +56,5 @@ def get_or_create_new_order_repo(request):
         return ServiceOrderNew(
                 ServiceRepo.queryset_to_repo(service_order.not_done_orders)
             ).get_new_order_repo()
-    except Http404:
+    except NotFound:
         return ServiceRepo.get_new_repo(service_order.create_new_order())

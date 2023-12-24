@@ -1,8 +1,7 @@
-from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import NotFound
 
 from app_menu.models import MenuItem
 from app_menu.repository import RepositoryMenuItem
-from app_order.repository import RepositoryOrder
 
 from .base import CartLine
 from .utils import validate
@@ -14,8 +13,11 @@ class ServiceOrderCartLine(CartLine):
 
     @staticmethod
     def _get_menu_item(menu_item_id: int):
-        return RepositoryMenuItem(
-            get_object_or_404(MenuItem, id=menu_item_id)).get()
+        try:
+            return RepositoryMenuItem(
+                MenuItem.objects.get(id=menu_item_id)).get()
+        except MenuItem.DoesNotExist:
+            raise NotFound(f"Menu item with id {menu_item_id} not found")
 
     @validate
     def add_line(self, request):

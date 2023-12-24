@@ -61,6 +61,6 @@ class CheckoutView(views.APIView):
 
     def get(self, request):
         order = get_new_order_repo(request)
-        serializer = UserDataSerializer(order.model.userdata)
-        return Response(serializer.data)
+        res = ServiceOrderCheckout(order.get())
+        return Response(res.get_checkout())
 

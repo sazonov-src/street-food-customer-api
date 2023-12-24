@@ -1,4 +1,5 @@
 from domain.order import OrderCustomer, UserData
+from app_order.serializer import UserDataSerializer
 
 from .utils import validate
 
@@ -11,3 +12,7 @@ class ServiceOrderCheckout:
         data = UserData(**user_data)
         self._order.mark_as_checkouted(data)
         return user_data
+
+    @validate
+    def get_checkout(self):
+        return UserDataSerializer(self._order.user_data).data
