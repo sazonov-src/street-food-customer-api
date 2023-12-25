@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     
     'app_menu.apps.MenuConfig',
     'app_order.apps.OrderConfig',
+    'app_payment_callbacks.apps.AppPaymentCallbacksConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,3 +127,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#liqpay public key
+LIQPAY_PUBLIC_KEY = 'test_public_key'
+#liqpay private key
+LIQPAY_PRIVATE_KEY = 'test_private_key'
+
