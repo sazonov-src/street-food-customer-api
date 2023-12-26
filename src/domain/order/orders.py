@@ -97,8 +97,6 @@ class StateCustomerCheckout(BaseCustomerState):
         raise OrderStateException(ALREADY_CHECKOUT_MASAGE)
 
     def mark_as_payed(self, payment: order.BasePayment):
-        if not len(self._order.cart):
-            raise NotFoundException(EMPTY_CART_MASAGE)
         if payment.is_payment():
             self._order._state = StateCustomerPayed(self._order)
         else:

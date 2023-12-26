@@ -7,6 +7,7 @@ from app_menu.models import MenuItem
 from dj.repository import BaseRepository, base_repo
 from domain import order as domain
 from domain.order.orders import OrderCustomer, NotFoundException
+from app_payment_callbacks.utils import get_hash_data, decode_data
 
 
 class OrderMixin:
@@ -45,6 +46,16 @@ class RepositoryCheckout(OrderMixin):
             'phone': userdata.phone})
 
 
+class RepositoryOrderPayment(OrderMixin):
+    def get(self) -> domain.BasePayment:
+        payment = self._order_model.paymentcallbackliqpay_set.all()
+        dataset = [decode_data(data.data) for data in payment]
+        return domain.PaymentLIQPay(dataset)
+
+    def add(self, payment: domain.BasePayment):
+        raise NotImplementedError
+
+
 class RepositoryOrder[DM: OrderCustomer, MD: Order](OrderMixin, BaseRepository):
 
     def get(self):
@@ -52,6 +63,8 @@ class RepositoryOrder[DM: OrderCustomer, MD: Order](OrderMixin, BaseRepository):
         if hasattr(self._order_model, "userdata"):
             order_domain.mark_as_checkouted(
                 RepositoryCheckout(self._order_model).get())
+        if self._order_model.paymentcallbackliqpay_set.all():
+            order_domain.mark_as_payed(RepositoryOrderPayment(self._order_model).get())
         return order_domain
     
     def add(self, order):
