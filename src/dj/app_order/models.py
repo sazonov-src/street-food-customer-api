@@ -2,6 +2,7 @@ from __future__ import annotations
 from django.db import models
 from django.contrib.auth.models import User
 from app_menu.models import MenuItem
+from app_payment_callbacks.models import PaymentCallbackLiqpay
 
 
 class Order(models.Model):
@@ -12,6 +13,7 @@ class Order(models.Model):
     done = models.BooleanField(default=False)
 
     cartline_set: models.QuerySet[CartLine]
+    paymentcallbackliqpay_set: models.QuerySet[PaymentCallbackLiqpay]
     userdata: UserData
 
 

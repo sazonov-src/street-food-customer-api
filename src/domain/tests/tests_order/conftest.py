@@ -3,9 +3,7 @@ import items
 import order
 
 class FakePayment(order.BasePayment):
-    def order(self):
-        pass
-    def get_payment_url(self) :
+    def __init__(self):
         pass
 
 class FakePaymentTrue(FakePayment):

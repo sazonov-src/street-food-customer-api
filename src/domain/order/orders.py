@@ -89,6 +89,9 @@ class StateCustomerPayed(BaseCustomerState):
     def mark_as_payed(self, payment: order.BasePayment):
         raise OrderStateException(ALREADY_PAYED_MASAGE)
 
+    def get_cart_for_payment(self):
+        raise OrderStateException(ALREADY_PAYED_MASAGE)
+
 
 class StateCustomerCheckout(BaseCustomerState):
     cart_type = order.CartMutable
@@ -97,12 +100,13 @@ class StateCustomerCheckout(BaseCustomerState):
         raise OrderStateException(ALREADY_CHECKOUT_MASAGE)
 
     def mark_as_payed(self, payment: order.BasePayment):
-        if not len(self._order.cart):
-            raise NotFoundException(EMPTY_CART_MASAGE)
         if payment.is_payment():
             self._order._state = StateCustomerPayed(self._order)
         else:
             raise OrderStateException(PAYMENT_IS_NOT_VALID_MASAGE)
+
+    def get_cart_for_payment(self):
+        return self._order.cart
 
 
 class StateCustomerNew(BaseCustomerState):
@@ -114,6 +118,9 @@ class StateCustomerNew(BaseCustomerState):
         self._order._state = StateCustomerCheckout(self._order)
 
     def mark_as_payed(self, payment: order.BasePayment):
+        raise OrderStateException(FIRST_CHECKOUT_MASAGE)
+
+    def get_cart_for_payment(self):
         raise OrderStateException(FIRST_CHECKOUT_MASAGE)
 
 
@@ -156,4 +163,6 @@ class OrderCustomer(BaseCustomerOrder):
         self._state.mark_as_payed(payment)
         self._reset_cart()
 
+    def get_cart_for_payment(self):
+        return self._state.get_cart_for_payment()
 

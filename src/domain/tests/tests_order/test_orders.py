@@ -21,8 +21,6 @@ def test_state_empty_cart(order_new_with_empty_cart, checkout, item, payment_tru
     order_new_with_empty_cart.cart[item] = 1
     order_new_with_empty_cart.mark_as_checkouted(checkout)
     del order_new_with_empty_cart.cart[item]
-    with pytest.raises(order.NotFoundException):
-        order_new_with_empty_cart.mark_as_payed(payment_true)
 
 
 def test_new_state(order_new, checkout, payment_true):
