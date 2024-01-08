@@ -6,6 +6,7 @@ from rest_framework import views
 from app_order.services import *
 from app_order.repository import repo
 from app_order.serializer import UserDataSerializer
+from dj.app_order.services.order_payment import ServiceOrderPayment
 
 
 @api_view()
@@ -64,3 +65,9 @@ class CheckoutView(views.APIView):
         res = ServiceOrderCheckout(order.get())
         return Response(res.get_checkout())
 
+
+@api_view()
+def get_payment_data(request):
+    order = get_new_order_repo(request)
+    res = ServiceOrderPayment(order.get()).get_payment_data(order.model.pk)
+    return Response(res)

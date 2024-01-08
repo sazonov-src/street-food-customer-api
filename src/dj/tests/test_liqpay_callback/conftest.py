@@ -8,8 +8,8 @@ from app_payment_callbacks import utils
 @pytest.fixture
 def callback_data():
     return {
-    "action"         : "pay",
-    "amount"         : "1",
+    "status"         : "success",
+    "amount"         : "100",
     "currency"       : "USD",
     "description"    : "description text",
     "order_id"       : "3",

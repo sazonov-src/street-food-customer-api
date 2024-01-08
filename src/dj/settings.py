@@ -133,3 +133,10 @@ LIQPAY_PUBLIC_KEY = 'test_public_key'
 #liqpay private key
 LIQPAY_PRIVATE_KEY = 'test_private_key'
 
+LIQPAY_PAYMENT_DATA = {
+    'action': 'pay',
+    'version': '3',
+    'public_key': LIQPAY_PUBLIC_KEY,
+    'currency': 'UAH',
+    'description': 'test',
+}
