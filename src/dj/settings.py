@@ -34,8 +34,8 @@ INSTALLED_APPS = [
     'rest_framework',
     
     'app_menu.apps.MenuConfig',
-    'app_order.apps.OrderConfig',
     'app_payment_callbacks.apps.AppPaymentCallbacksConfig',
+    'app_cart.apps.AppCartConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
