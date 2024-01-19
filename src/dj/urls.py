@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/customer/menu/', include('api.customer.menu.urls')),
     path('api/v1/payment_callbacks/', include('app_payment_callbacks.urls')),
+    path('api/v1/customer/', include('api.customer.urls_cart')),
 ]
