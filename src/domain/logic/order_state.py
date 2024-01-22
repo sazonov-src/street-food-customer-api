@@ -1,41 +1,47 @@
 from __future__ import annotations
+from typing import Iterable
+from domain.models.order import Order
+
+
+class OrderError(Exception):
+    pass
+
+class NewOrderError(OrderError):
+    pass
+
+class PayedOrderError(OrderError):
+    pass
+
 
 class OrderHandler:
+    order: Order
+
     def __init__(self, successor=None):
         self.successor = successor
-        self.order = None
 
-    def handle_order(self, order_data):
+    def handle_order(self, order: Order):
         if self.successor:
-            self.successor.handle_order(order_data)
+            self.successor.handle_order(order)
+
 
 class NewOrderHandler(OrderHandler):
     def handle_order(self, order_data):
-        if order_data.get("cart"): 
-            super().handle_order(order_data)
-        raise Exception("First add items to cart")
+        super().handle_order(order_data)
+        if len(order_data.cart_data.lines) == 0:
+            raise NewOrderError("Cart is empty")
+        self.order = order_data
 
-class ContactOrderHandler(OrderHandler):
-    def handle_order(self, order_data):
-        if order_data.get("contacts"):
-            super().handle_order(order_data)
-        raise Exception("First add contacts")
 
 class PayedOrderHandler(OrderHandler):
     def handle_order(self, order_data):
-        if order_data.get("payment_callbacks"):
-            super().handle_order(order_data)
-        raise Exception("First payed")
+        super().handle_order(order_data)
         
 
-if __name__ == "__main__":
-    order = {
-        "cart_data": {},
-        "contacts": [],
-        "payment_callbacks": [],
-        "ready": False,
-        "done": False,
-    }
 
-    handler_chain = NewOrderHandler(ContactOrderHandler(PayedOrderHandler()))
-    handler_chain.handle_order(order)
+def get_new_order_handler_or_false(order: Order) :
+    order_handler = NewOrderHandler(PayedOrderHandler())
+    try:
+        order_handler.handle_order(order)
+    except PayedOrderError as e:
+        pass
+    return order_handler

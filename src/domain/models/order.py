@@ -1,13 +1,16 @@
 from __future__ import annotations
-from pydantic import BaseModel
+from typing import Annotated
+from pydantic import AfterValidator, BaseModel, computed_field
+
+from .cart import Cart
+from .contact import Contact
 
 
 class Order(BaseModel):
-    user_id: str
-    contact: Contact
-    is_ready: bool
-    done: bool
+    cart_data: Cart
+    contact_data: Contact
+    accepted: bool = False
+    is_ready: bool = False
+    done: bool = False
 
-class Contact(BaseModel):
-    name: str
-    phone: str
+

@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'app_menu.apps.MenuConfig',
     'app_payment_callbacks.apps.AppPaymentCallbacksConfig',
     'app_cart.apps.AppCartConfig',
+    'app_order.apps.AppOrderConfig',
+    'app_contact.apps.AppContactConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
