@@ -1,7 +1,8 @@
 import pytest
 from app_order.repository import CustomNewOrderRepository
 from app_order.models import OrderModel
-from domain.logic.order_state import NewOrderError, NewOrderHandler
+
+import domain
 
 
 @pytest.mark.django_db
@@ -10,12 +11,12 @@ def test_get_new_order(user, cartlines, contact):
     order_handler = repo.get()
     repo.add(order_handler.order)
     assert len(OrderModel.objects.all()) == 1
-    assert isinstance(order_handler, NewOrderHandler)
+    assert isinstance(order_handler, domain.NewOrderHandler)
 
 @pytest.mark.django_db
 def test_get_new_order_with_empty_cart(user, contact):
     repo = CustomNewOrderRepository(user)
-    with pytest.raises(NewOrderError):
+    with pytest.raises(domain.NewOrderError):
         order = repo.get().order
 
 @pytest.mark.django_db

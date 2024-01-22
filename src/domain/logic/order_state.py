@@ -1,9 +1,19 @@
 from __future__ import annotations
 from typing import Iterable
-from domain.models.order import Order
 
+from models.order import Order
 
-class OrderError(Exception):
+__all__ = [
+    'OrderHandler',
+    'NewOrderHandler',
+    'PayedOrderHandler',
+    'get_new_order_handler',
+    'OrderError',
+    'NewOrderError',
+    'PayedOrderError',
+]
+
+class OrderError(ValueError):
     pass
 
 class NewOrderError(OrderError):
@@ -38,7 +48,7 @@ class PayedOrderHandler(OrderHandler):
         
 
 
-def get_new_order_handler_or_false(order: Order) :
+def get_new_order_handler(order: Order) :
     order_handler = NewOrderHandler(PayedOrderHandler())
     try:
         order_handler.handle_order(order)

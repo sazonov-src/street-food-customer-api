@@ -1,14 +1,15 @@
 from typing import Any
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from app_cart.repository import set_cart_repo
 from app_menu.models import MenuItem
-from domain.models import cart
 from app_cart.serializers import MenuItemSerializer, CartLineSerializer
-from utils import validate
-from django.shortcuts import get_object_or_404
+from src.utils import validate
+
+import domain
 
 
 class CartViewSet(viewsets.ViewSet):
@@ -55,4 +56,4 @@ class CartViewSet(viewsets.ViewSet):
 
     def _get_product_or_404(self, id):
         menuitem = get_object_or_404(MenuItem, id=id)
-        return cart.Product(**MenuItemSerializer(menuitem).data)
+        return domain.Product(**MenuItemSerializer(menuitem).data)

@@ -1,6 +1,8 @@
 import pytest
 from mixer.backend.django import mixer
-from domain.models import cart
+
+import domain
+
 
 @pytest.fixture
 def user():
@@ -20,7 +22,7 @@ def menuitem33():
 
 @pytest.fixture
 def menuitem33_domain(menuitem33):
-    return cart.Product(id=33, price=10)
+    return domain.Product(id=33, price=10)
 
 @pytest.fixture
 def contact(user):

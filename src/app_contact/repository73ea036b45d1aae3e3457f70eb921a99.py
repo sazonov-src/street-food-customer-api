@@ -1,5 +1,4 @@
 import domain
-
 from .models import Contact
 from .serializers import ContactSerializer
 

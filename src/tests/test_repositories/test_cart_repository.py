@@ -1,8 +1,8 @@
 import pytest
 from app_cart.repository import CartRepository
-from domain.models.cart import Cart
 from app_menu.models import MenuItem
 from app_cart.serializers import MenuItemSerializer, ReadeOnlyCartLineSerializer
+
 
 @pytest.mark.django_db
 def test_get(user, cartlines):
