@@ -22,7 +22,7 @@ def menuitem33():
 
 @pytest.fixture
 def menuitem33_domain(menuitem33):
-    return domain.Product(id=33, price=10)
+    return domain.ModelCartItem(id=33, price=10)
 
 @pytest.fixture
 def contact(user):

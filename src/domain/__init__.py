@@ -2,7 +2,7 @@
 import sys
 sys.path.append(__name__)
 
-from models.cart import Cart, CartLine, Product
-from models.order import Order
-from models.contact import Contact
+from models.cart import ModelCart, ModelCartLine, ModelCartItem
+from models.order import ModalOrder
+from models.contact import ModalContact
 from logic.order_state import *

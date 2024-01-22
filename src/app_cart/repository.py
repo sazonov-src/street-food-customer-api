@@ -14,7 +14,7 @@ class CartRepository:
     def get(self):
         serializer = ReadeOnlyCartLineSerializer(
             self.user.cartline_set, many=True)
-        return domain.Cart(lines=[*serializer.data])
+        return domain.ModelCart(lines=[*serializer.data])
 
     @transaction.atomic
     def add(self, cart):

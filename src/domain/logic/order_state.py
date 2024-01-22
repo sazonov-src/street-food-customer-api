@@ -1,57 +1,57 @@
 from __future__ import annotations
 from typing import Iterable
 
-from models.order import Order
+from models.order import ModalOrder
 
 __all__ = [
-    'OrderHandler',
-    'NewOrderHandler',
-    'PayedOrderHandler',
-    'get_new_order_handler',
-    'OrderError',
-    'NewOrderError',
-    'PayedOrderError',
+    'StateOrder',
+    'StateOrderNew',
+    'StateOrderPayed',
+    'get_new_order_state',
+    'ErrorOrderState',
+    'ErrorNewOrderState',
+    'ErrorPayedOrderState',
 ]
 
-class OrderError(ValueError):
+class ErrorOrderState(ValueError):
     pass
 
-class NewOrderError(OrderError):
+class ErrorNewOrderState(ErrorOrderState):
     pass
 
-class PayedOrderError(OrderError):
+class ErrorPayedOrderState(ErrorOrderState):
     pass
 
 
-class OrderHandler:
-    order: Order
+class StateOrder:
+    order: ModalOrder
 
     def __init__(self, successor=None):
         self.successor = successor
 
-    def handle_order(self, order: Order):
+    def handle_order(self, order: ModalOrder):
         if self.successor:
             self.successor.handle_order(order)
 
 
-class NewOrderHandler(OrderHandler):
+class StateOrderNew(StateOrder):
     def handle_order(self, order_data):
         super().handle_order(order_data)
         if len(order_data.cart_data.lines) == 0:
-            raise NewOrderError("Cart is empty")
+            raise ErrorNewOrderState("Cart is empty")
         self.order = order_data
 
 
-class PayedOrderHandler(OrderHandler):
+class StateOrderPayed(StateOrder):
     def handle_order(self, order_data):
         super().handle_order(order_data)
         
 
 
-def get_new_order_handler(order: Order) :
-    order_handler = NewOrderHandler(PayedOrderHandler())
+def get_new_order_state(order: ModalOrder) :
+    order_handler = StateOrderNew(StateOrderPayed())
     try:
         order_handler.handle_order(order)
-    except PayedOrderError as e:
+    except ErrorPayedOrderState as e:
         pass
     return order_handler

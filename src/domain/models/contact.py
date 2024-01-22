@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class Contact(BaseModel):
+class ModalContact(BaseModel):
     name: str
     phone: str

@@ -2,7 +2,7 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
-class LiqpayPayment(BaseModel):
+class ModalLiqpayPayment(BaseModel):
     order_id: str
     amount: str
     version: str
@@ -10,10 +10,10 @@ class LiqpayPayment(BaseModel):
     action: str
     currency: str
     description: str
-    items: list[LiqpayItem]
+    items: list[ModalLiqpayItem]
 
 
-class LiqpayItem(BaseModel):
+class ModalLiqpayItem(BaseModel):
     id: int
     amount: int
     cost: int

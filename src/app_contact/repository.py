@@ -8,7 +8,7 @@ def get_last_contact(user):
     contact_ = Contact.objects.filter(user=user).last()
     if contact_:
         serializer = ContactSerializer(contact_)
-        return domain.Contact(**serializer.data)
+        return domain.ModalContact(**serializer.data)
     raise ValueError("Contact not found")
 
 
