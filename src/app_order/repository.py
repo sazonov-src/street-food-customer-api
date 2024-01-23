@@ -1,3 +1,4 @@
+from rest_framework.exceptions import NotFound
 from app_cart.repository import CartRepository
 from app_contact.repository import ContactRepository
 
@@ -5,6 +6,11 @@ from .models import OrderModel
 from .serializers import OrderSerializer
 
 import domain
+
+
+__all__ = [
+    'NewOrderStateRepository',
+]
 
 
 def get_neworderstate_and_ordermodel_or_none(user):
@@ -24,7 +30,7 @@ def create_new_order_obj(user):
     return order_handler
 
 
-class CustomNewOrderStateRepository:
+class NewOrderStateRepository:
 
     def __init__(self, user):
         self.user = user
@@ -33,10 +39,10 @@ class CustomNewOrderStateRepository:
     def get(self):
         if self.order_state:
             return self.order_state
-        return create_new_order_obj(self.user)
+        raise NotFound('No new order found')
 
-    def add(self, order_):
+    def add(self, neworder_state):
         obj = [self.order] if self.order else []
-        serializer = OrderSerializer(*obj, data=order_.model_dump())
+        serializer = OrderSerializer(*obj, data=neworder_state.order.model_dump())
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.user)

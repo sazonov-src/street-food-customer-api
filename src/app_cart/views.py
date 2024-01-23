@@ -4,7 +4,6 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from app_cart.repository import set_cart_repo
 from app_menu.models import MenuItem
 from app_cart.serializers import MenuItemSerializer, CartLineSerializer
 from src.utils import validate, set_repo

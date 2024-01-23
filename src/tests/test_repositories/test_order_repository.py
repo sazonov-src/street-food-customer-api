@@ -1,5 +1,6 @@
 import pytest
-from app_order.repository import CustomNewOrderStateRepository
+from rest_framework.exceptions import NotFound
+from app_order.repository import NewOrderStateRepository, create_new_order_obj
 from app_order.models import OrderModel
 
 import domain
@@ -7,29 +8,35 @@ import domain
 
 @pytest.mark.django_db
 def test_get_new_order(user, cartlines, contact):
-    repo = CustomNewOrderStateRepository(user)
-    order_handler = repo.get()
-    repo.add(order_handler.order)
+    repo = NewOrderStateRepository(user)
+    with pytest.raises(NotFound):
+        order_handler = repo.get()
+
+@pytest.mark.django_db
+def test_create_new_order(user, cartlines, contact):
+    repo = NewOrderStateRepository(user)
+    neworder_state = create_new_order_obj(user)
+    repo.add(neworder_state)
     assert len(OrderModel.objects.all()) == 1
-    assert isinstance(order_handler, domain.StateOrderNew)
 
 @pytest.mark.django_db
 def test_get_new_order_with_empty_cart(user, contact):
-    repo = CustomNewOrderStateRepository(user)
+    repo = NewOrderStateRepository(user)
     with pytest.raises(domain.ErrorNewOrderState):
-        order = repo.get().order
+        create_new_order_obj(user)
 
 @pytest.mark.django_db
 def test_add_new_order_without_contact(user, cartlines):
-    repo = CustomNewOrderStateRepository(user)
-    with pytest.raises(ValueError):
+    repo = NewOrderStateRepository(user)
+    with pytest.raises(NotFound):
         order = repo.get().order
 
 @pytest.mark.django_db
 def test_add_new_order_with_existing_model(user, cartlines, contact):
-    repo = CustomNewOrderStateRepository(user)
-    repo.add(repo.get().order)
+    repo = NewOrderStateRepository(user)
+    neworder_state = create_new_order_obj(user)
+    repo.add(neworder_state)
     assert len(OrderModel.objects.all()) == 1
-    repo = CustomNewOrderStateRepository(user)
-    repo.add(repo.get().order)
+    repo = NewOrderStateRepository(user)
+    repo.add(repo.get())
     assert len(OrderModel.objects.all()) == 1

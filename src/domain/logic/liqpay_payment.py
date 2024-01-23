@@ -2,11 +2,8 @@ import base64
 import hashlib
 import json
 
-from domain import domain_setup
-
-
 def hash_data_to_sign(data: str):
-    str_ = domain_setup.LIQPAY_PRIVATE_KEY + data + domain_setup.LIQPAY_PRIVATE_KEY
+    str_ = settings.LIQPAY_PRIVATE_KEY + data + settings.LIQPAY_PRIVATE_KEY
     return base64.b64encode(hashlib.sha1(str_.encode('utf-8')).digest()).decode('utf-8')
 
 def decode_data(data: str) -> dict:

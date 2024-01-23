@@ -6,7 +6,6 @@ def test_cart_get_new(client):
     res = client.get('/api/v1/customer/cart/')
     assert res.status_code == 200
     assert len(res.data['lines']) == 0
-    print(res.data)
 
 @pytest.mark.django_db
 def test_cart_get(client, cart_lines1_2_3):

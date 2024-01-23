@@ -28,3 +28,8 @@ def menu_item4():
 def cart_lines1_2_3(menu_items1_2_3, user):
     return [mixer.blend('app_cart.CartLine', menu_item=i, quantity=1, user=user)
             for i in menu_items1_2_3]
+
+@pytest.fixture
+def contact(user):
+    return mixer.blend('app_contact.Contact', user=user, name='name', phone='phone')
+

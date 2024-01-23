@@ -21,16 +21,17 @@ def convert_camel_to_snake(class_name):
             result.append(char)
     return ''.join(result)
 
-def set_repo(class_repo, add=True):
+def set_repo(class_repo, get=True, add=True):
     def decorator(method):
         @functools.wraps(method)
         def wrapper(self, *args, **kwargs):
             cart_repo = class_repo(self.get_user)
             attr_name = '_'.join(convert_camel_to_snake(class_repo.__name__).split('_')[:-1])
-            setattr(self, attr_name, cart_repo.get())
+            if get:
+                setattr(self, attr_name, cart_repo.get())
             res = method(self, *args, **kwargs)
             if add:
-                cart_repo.add(self.cart)
+                cart_repo.add(getattr(self, attr_name))
             return res
         return wrapper
     return decorator
