@@ -35,7 +35,7 @@ def contact(user):
 
 @pytest.fixture
 def order(user):
-    return mixer.blend('app_order.OrderModel', user=user, cart_data={'lines': [{'menu_item': {'id': 1, 'price': 10.0}, 'quantity': 1,
+    return mixer.blend('app_order.Order', user=user, cart_data={'lines': [{'menu_item': {'id': 1, 'price': 10.0}, 'quantity': 1,
                                                                                  'total': 10.0}]}, contact_data={'name': 'name', 'phone': 'phone'})
 
 @pytest.fixture

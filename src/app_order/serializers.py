@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
-from .models import OrderModel
+from .models import Order
 
 
 class OrderSerializer(serializers.ModelSerializer):
     pay_callbacks = serializers.SerializerMethodField()
 
     class Meta:
-        model = OrderModel
+        model = Order
         fields = ['cart_data', 'contact_data', 'accepted', 'is_ready', 'done', 'pay_callbacks']
 
     def get_pay_callbacks(self, obj):

@@ -1,9 +1,8 @@
-import re
 from rest_framework.exceptions import NotFound
 from app_cart.repository import CartRepository
 from app_contact.repository import ContactRepository
 
-from .models import OrderModel
+from .models import Order
 from .serializers import OrderSerializer
 
 import domain
@@ -18,7 +17,7 @@ def get_ordermodel(order):
     return domain.ModalOrder(**serializer.data)
 
 def get_neworderstate_and_order(user):
-    order_set = OrderModel.objects.filter(user=user, accepted=False)
+    order_set = Order.objects.filter(user=user, accepted=False)
     order_dict = {get_ordermodel(order): order for order in order_set}
     neworder_state = domain.get_new_order_state(order_dict)
     return neworder_state, order_dict[neworder_state.order]
