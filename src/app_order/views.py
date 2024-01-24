@@ -2,6 +2,7 @@ from types import new_class
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound, ValidationError
 
 from src.utils import set_repo, validate
 from .repository import NewOrderStateRepository, create_new_order_obj
@@ -21,8 +22,12 @@ class NewOrderAPIView(APIView):
         return Response(self.new_order_state.order.model_dump())
 
     @validate
-    @set_repo(NewOrderStateRepository, get=False)
     def post(self, request):
-        self.new_order_state = create_new_order_obj(self.get_user)
-        return Response(self.new_order_state.order.model_dump())
+        repo = NewOrderStateRepository(self.get_user)
+        try:
+            repo.get()
+        except NotFound:
+            repo.add(neworder_state := create_new_order_obj(self.get_user))
+            return Response(neworder_state.order.model_dump())
+        raise ValidationError('Order already created')
 

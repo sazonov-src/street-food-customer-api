@@ -8,8 +8,11 @@ from models.contact import ModalContact
 class ModalOrder(BaseModel):
     cart_data: ModelCart
     contact_data: ModalContact
-    payment_callbacks: list[dict] = Field(default_factory=list)
+    pay_callbacks: list[dict] = Field(default_factory=list)
     accepted: bool = False
     is_ready: bool = False
     done: bool = False
+
+    def __hash__(self):
+        return hash((self.cart_data, self.contact_data))
 

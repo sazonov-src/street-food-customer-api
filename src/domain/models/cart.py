@@ -29,6 +29,9 @@ class ModelCart(BaseModel):
     def total(self) -> float:
         return sum(line.total for line in self.lines)
 
+    def __hash__(self):
+        return hash(tuple(self.lines))
+
 
 def check_is_gt_zero(value):
     if value >= 1:
@@ -45,6 +48,9 @@ class ModelCartLine(BaseModel):
             ModelCartItem, 
             PlainSerializer(lambda x: x.id, when_used='json')]
     quantity: Quantity = 1
+
+    def __hash__(self):
+        return hash((self.menu_item, self.quantity))
 
     @computed_field
     @property
@@ -65,3 +71,6 @@ class ModelCartLine(BaseModel):
 class ModelCartItem(BaseModel):
     id: int
     price: float
+
+    def __hash__(self):
+        return hash(self.id)

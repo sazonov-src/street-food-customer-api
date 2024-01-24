@@ -27,3 +27,7 @@ def menuitem33_domain(menuitem33):
 @pytest.fixture
 def contact(user):
     return mixer.blend('app_contact.Contact', user=user, name='name', phone='phone')
+
+@pytest.fixture
+def pay_callbacks():
+    pass

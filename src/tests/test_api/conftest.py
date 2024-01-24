@@ -33,3 +33,12 @@ def cart_lines1_2_3(menu_items1_2_3, user):
 def contact(user):
     return mixer.blend('app_contact.Contact', user=user, name='name', phone='phone')
 
+@pytest.fixture
+def order(user):
+    return mixer.blend('app_order.OrderModel', user=user, cart_data={'lines': [{'menu_item': {'id': 1, 'price': 10.0}, 'quantity': 1,
+                                                                                 'total': 10.0}]}, contact_data={'name': 'name', 'phone': 'phone'})
+
+@pytest.fixture
+def pay_callbacks(order):
+    return mixer.blend('app_payment_callbacks.PaymentCallbackLiqpay', order=order, data={'status': 'OK'}, signature='signature')
+

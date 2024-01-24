@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Iterable
 
+from rest_framework.exceptions import NotFound
+
 from models.order import ModalOrder
 
 __all__ = [
@@ -45,13 +47,18 @@ class StateOrderNew(StateOrder):
 class StateOrderPayed(StateOrder):
     def handle_order(self, order_data):
         super().handle_order(order_data)
+        raise ErrorPayedOrderState("Order not payed")
         
 
 
-def get_new_order_state(order: ModalOrder) :
-    order_handler = StateOrderNew(StateOrderPayed())
-    try:
-        order_handler.handle_order(order)
-    except ErrorPayedOrderState as e:
-        pass
-    return order_handler
+def get_new_order_state(orders: Iterable[ModalOrder]) -> StateOrderNew:
+    for order in orders:
+        order_handler = StateOrderPayed()
+        try:
+            order_handler.handle_order(order)
+        except ErrorPayedOrderState:
+            order_handler = StateOrderNew()
+            order_handler.handle_order(order)
+            return order_handler
+    raise NotFound("New order not found")
+

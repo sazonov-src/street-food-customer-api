@@ -1,3 +1,4 @@
+import re
 from rest_framework.exceptions import NotFound
 from app_cart.repository import CartRepository
 from app_contact.repository import ContactRepository
@@ -12,14 +13,15 @@ __all__ = [
     'NewOrderStateRepository',
 ]
 
+def get_ordermodel(order):
+    serializer = OrderSerializer(order)
+    return domain.ModalOrder(**serializer.data)
 
-def get_neworderstate_and_ordermodel_or_none(user):
+def get_neworderstate_and_order(user):
     order_set = OrderModel.objects.filter(user=user, accepted=False)
-    for order_ in order_set:
-        serializer = OrderSerializer(order_)
-        if order_state_ := domain.get_new_order_state(domain.ModalOrder(**serializer.data)):
-            return order_, order_state_ 
-    return None, None
+    order_dict = {get_ordermodel(order): order for order in order_set}
+    neworder_state = domain.get_new_order_state(order_dict)
+    return neworder_state, order_dict[neworder_state.order]
 
 def create_new_order_obj(user):
     order_handler = domain.StateOrderNew()
@@ -31,18 +33,17 @@ def create_new_order_obj(user):
 
 
 class NewOrderStateRepository:
-
     def __init__(self, user):
         self.user = user
-        self.order, self.order_state = get_neworderstate_and_ordermodel_or_none(self.user)
 
     def get(self):
-        if self.order_state:
-            return self.order_state
-        raise NotFound('No new order found')
+        return get_neworderstate_and_order(self.user)[0]
 
     def add(self, neworder_state):
-        obj = [self.order] if self.order else []
-        serializer = OrderSerializer(*obj, data=neworder_state.order.model_dump())
+        try:
+            _, obj = get_neworderstate_and_order(self.user)
+            serializer = OrderSerializer(obj, data=neworder_state.order.model_dump())
+        except NotFound:
+            serializer = OrderSerializer(data=neworder_state.order.model_dump())
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.user)
