@@ -62,3 +62,4 @@ def get_new_order(orders: Iterable[ModalOrder]) -> ModalOrder:
             return order
     raise NotFound("New order not found")
 
+

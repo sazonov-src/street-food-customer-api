@@ -16,3 +16,5 @@ class ModalOrder(BaseModel):
     def __hash__(self):
         return hash((self.cart_data, self.contact_data))
 
+def get_payment_data(order: ModalOrder):
+    return order

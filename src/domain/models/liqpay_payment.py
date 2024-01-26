@@ -10,11 +10,8 @@ class ModalLiqpayPayment(BaseModel):
     action: str
     currency: str
     description: str
-    items: list[ModalLiqpayItem]
 
 
-class ModalLiqpayItem(BaseModel):
-    id: int
-    amount: int
-    cost: int
-    price: int
+class ModelLiqpayData(ModalLiqpayPayment):
+    data: str
+    signature: str

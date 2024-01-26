@@ -7,8 +7,9 @@ import domain
 
 @api_view(['POST'])
 def liqpay_callback(request):
-    data = request.data
-    pay_data = domain.get_valid_data(data['data'], data['signature'])
-    order = Order.objects.get(id=pay_data['order_id'])
-    PaymentCallbackLiqpay.objects.create(order=order, data=pay_data, sign=data['signature'])
+    sdk= domain.LiqpaySDK(request.data)
+    sdk.validate(request.data['signature'])
+    data = sdk.decode_data(request.data['data'])
+    order = Order.objects.get(id=data['order_id'])
+    PaymentCallbackLiqpay.objects.create(order=order, data=data, sign=request.data['signature'])
     return Response({'status': 'OK'})
