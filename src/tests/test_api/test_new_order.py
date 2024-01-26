@@ -25,4 +25,4 @@ def test_without_contact(client, cart_lines1_2_3):
 @pytest.mark.django_db
 def test_payed_order(client, order, contact, cart_lines1_2_3, pay_callbacks):
     response = client.get('/api/v1/customer/new-order/')
-    assert response.status_code == 200
+    assert response.status_code == 404

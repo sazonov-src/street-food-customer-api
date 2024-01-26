@@ -9,7 +9,7 @@ __all__ = [
     'StateOrder',
     'StateOrderNew',
     'StateOrderPayed',
-    'get_new_order_state',
+    'get_new_order',
     'ErrorOrderState',
     'ErrorNewOrderState',
     'ErrorPayedOrderState',
@@ -31,34 +31,34 @@ class StateOrder:
     def __init__(self, successor=None):
         self.successor = successor
 
-    def handle_order(self, order: ModalOrder):
+    def handle_order(self, order: ModalOrder) -> ModalOrder:
         if self.successor:
             self.successor.handle_order(order)
+        return order
 
 
 class StateOrderNew(StateOrder):
     def handle_order(self, order_data):
-        super().handle_order(order_data)
         if len(order_data.cart_data.lines) == 0:
             raise ErrorNewOrderState("Cart is empty")
-        self.order = order_data
+        return super().handle_order(order_data)
 
 
 class StateOrderPayed(StateOrder):
     def handle_order(self, order_data):
-        super().handle_order(order_data)
+        for callback in order_data.pay_callbacks:
+            if callback.get('status') and callback['status'] == 'OK':
+                return super().handle_order(order_data)
         raise ErrorPayedOrderState("Order not payed")
-        
 
 
-def get_new_order_state(orders: Iterable[ModalOrder]) -> StateOrderNew:
+
+def get_new_order(orders: Iterable[ModalOrder]) -> ModalOrder:
     for order in orders:
-        order_handler = StateOrderPayed()
+        order_handler = StateOrderNew(StateOrderPayed())
         try:
             order_handler.handle_order(order)
         except ErrorPayedOrderState:
-            order_handler = StateOrderNew()
-            order_handler.handle_order(order)
-            return order_handler
+            return order
     raise NotFound("New order not found")
 
