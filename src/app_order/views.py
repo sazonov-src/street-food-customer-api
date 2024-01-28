@@ -3,11 +3,13 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.decorators import api_view
 
 from src.utils import set_repo, validate
 from .repository import NewOrderRepository, create_new_order_obj
 
 import domain
+
 
 class NewOrderAPIView(APIView):
     new_order: domain.ModalOrder
@@ -31,3 +33,10 @@ class NewOrderAPIView(APIView):
             return Response(new_order.model_dump())
         raise ValidationError('Order already created')
 
+
+@api_view(['GET'])
+def get_payment_data(request):
+    repo = NewOrderRepository(request.user)
+    liqpay = domain.LiqpaySDK(
+        domain.get_liqpay_payment_data(repo.get()))
+    return Response({'data': liqpay.encode_data, 'signature': liqpay.signature})

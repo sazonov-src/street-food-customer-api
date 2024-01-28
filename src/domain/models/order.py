@@ -12,6 +12,7 @@ class ModalOrder(BaseModel):
     accepted: bool = False
     is_ready: bool = False
     done: bool = False
+    id: int | None = None
 
     def __hash__(self):
         return hash((self.cart_data, self.contact_data))

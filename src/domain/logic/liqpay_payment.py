@@ -2,6 +2,7 @@ import base64
 import hashlib
 import json
 import domain_setup
+from models.order import ModalOrder
 
 
 class LiqpaySDK:
@@ -26,3 +27,16 @@ class LiqpaySDK:
     def validate(self, sign: str) -> None:
         if self.signature != sign:
             raise ValueError('Data is invalid')
+
+
+def get_liqpay_payment_data(order: ModalOrder):
+    if not order.id:
+        raise ValueError('Order id is not set')
+    return {'version': 3,
+            'public_key': domain_setup.LIQPAY_PUBLIC_KEY,
+            'action': 'pay',
+            'amount': order.cart_data.total,
+            'currency': 'UAH',
+            'description': f'Оплата замовлення {order.id}',
+            'order_id': order.id,}
+
