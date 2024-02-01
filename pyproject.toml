@@ -12,12 +12,15 @@ autopep8 = "^2.0.4"
 django = "^4.2.7"
 djangorestframework = "^3.14.0"
 django-stubs = "^4.2.6"
+psycopg2 = "^2.9.9"
+pydantic = "^2.5.3"
 
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.1"
 pytest-django = "^4.7.0"
 mixer = "^7.2.2"
+rope = "^1.11.0"
 
 [build-system]
 requires = ["poetry-core"]
