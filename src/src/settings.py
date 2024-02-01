@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'app_cart.apps.AppCartConfig',
     'app_order.apps.AppOrderConfig',
     'app_contact.apps.AppContactConfig',
+    'firebase_drf_auth',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,6 +59,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'src.urls'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'firebase_drf_auth.auth.FirebaseJWTAuth',
+    ]
+}
 
 TEMPLATES = [
     {
@@ -144,3 +152,5 @@ LIQPAY_PAYMENT_DATA = {
     'currency': 'UAH',
     'description': 'test',
 }
+
+FIREBASE_AUTH_STRICT = False
