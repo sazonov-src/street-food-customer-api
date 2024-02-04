@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-iv=9$3)5jnr((78#*ztv&)^fxal%f&r+o2uis@jcfbukeb-_s_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['b8ff-185-181-36-220.ngrok-free.app']
 
 
 # Application definition
@@ -38,8 +39,9 @@ INSTALLED_APPS = [
     'app_cart.apps.AppCartConfig',
     'app_order.apps.AppOrderConfig',
     'app_contact.apps.AppContactConfig',
-    'firebase_drf_auth',
 
+    "corsheaders",
+    'firebase_drf_auth',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = 'src.urls'
@@ -83,7 +87,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'dj.wsgi.application'
+WSGI_APPLICATION = 'src.wsgi.application'
 
 
 # Database
@@ -128,6 +132,19 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    "Content-Type",
+    "X-Firebase-AppCheck",
+    "ngrok-skip-browser-warning",
+    "Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+)
 
 
 # Static files (CSS, JavaScript, Images)

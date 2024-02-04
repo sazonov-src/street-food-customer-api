@@ -1,10 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
+from rest_framework.permissions import IsAuthenticated
 from app_menu.models import MenuItem
 from app_menu.serializer import MenuItemSerializer
 
 
 class MenuItemViewSet(ViewSet):
+    permission_classes = [IsAuthenticated]
+
     def list(self, request):
         items_queryset = MenuItem.objects.all()
         serializer = MenuItemSerializer(items_queryset, many=True)

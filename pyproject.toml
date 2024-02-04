@@ -15,6 +15,7 @@ django-stubs = "^4.2.6"
 psycopg2 = "^2.9.9"
 pydantic = "^2.5.3"
 firebase-drf-auth = "^0.1"
+django-cors-headers = "^4.3.1"
 
 
 [tool.poetry.group.dev.dependencies]
