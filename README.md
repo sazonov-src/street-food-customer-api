@@ -1,8 +1,5 @@
-# Project Specification
-
-## Overview
-This project is a web-based application designed to manage customer orders, carts, and payments. It includes various modules to handle different aspects of the application such as customer management, menu items, orders, and payment callbacks.
-
+This project of writing in Django uses a different DDD (Domain-Driven Design) approach to separate business logic and application infrastructure.
+This app implements the business logic of completing payment transactions and transferring encrypted data to the LiqPay payment gateway. In addition, you can also add an end point to remove payment information from the payment gateway
 ## Modules
 
 ### Customer
